@@ -1,0 +1,62 @@
+name: CD — Deploy to EC2
+
+on:
+  workflow_run:
+    workflows: ["CI — Build and Push"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Login to ECR from EC2
+            aws ecr get-login-password --region us-east-1 | \
+              docker login --username AWS --password-stdin \
+              ${{ steps.login-ecr.outputs.registry }}
+
+            # Pull latest image
+            docker pull ${{ steps.login-ecr.outputs.registry }}/resqops-api:latest
+
+            # Stop old container gracefully
+            docker stop resqops-api || true
+            docker rm resqops-api || true
+
+            # Start new container
+            docker run -d \
+              --name resqops-api \
+              --restart always \
+              -p 5000:5000 \
+              -e DB_HOST=${{ secrets.DB_HOST }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              ${{ steps.login-ecr.outputs.registry }}/resqops-api:latest
+
+            # Health check — wait 10s then verify
+            sleep 10
+            curl -f http://localhost:5000/health || exit 1
