@@ -33,7 +33,7 @@ resource "aws_security_group" "rds_sg" {
 resource "aws_db_instance" "postgres" {
   identifier        = "resqops-db"
   engine            = "postgres"
-  engine_version    = "14.13"
+  engine_version    = "17.7"
   instance_class    = "db.t3.micro"   # free tier eligible
   allocated_storage = 20
 

@@ -71,16 +71,18 @@ resource "aws_instance" "app_server" {
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
   associate_public_ip_address = true
+   key_name               = "resq"
 
   # This script runs automatically when EC2 boots for the first time
-  user_data = <<-EOF
+ user_data = <<-EOF
     #!/bin/bash
-    yum update -y
-    yum install -y docker
-    service docker start
-    usermod -a -G docker ec2-user
+    apt-get update -y
+    apt-get install -y docker.io awscli
+    systemctl start docker
+    systemctl enable docker
+    usermod -a -G docker ubuntu
 
-    # Login to ECR (uses the IAM role attached above — no passwords needed)
+    # Login to ECR
     aws ecr get-login-password --region us-east-1 | \
       docker login --username AWS --password-stdin ${var.ecr_image_url}
 
@@ -92,7 +94,7 @@ resource "aws_instance" "app_server" {
       --restart always \
       ${var.ecr_image_url}
   EOF
-
+  
   tags = {
     Name    = "resqops-app-server"
     Project = "ResQOps"
