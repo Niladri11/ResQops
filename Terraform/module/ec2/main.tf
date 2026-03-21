@@ -83,7 +83,7 @@ resource "aws_instance" "app_server" {
     usermod -a -G docker ubuntu
 
     # Login to ECR
-    aws ecr get-login-password --region us-east-1 | \
+    aws ecr get-login-password --region ap-south-1 | \
       docker login --username AWS --password-stdin ${var.ecr_image_url}
 
     # Pull and run your Flask container
