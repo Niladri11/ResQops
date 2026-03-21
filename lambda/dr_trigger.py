@@ -50,7 +50,7 @@ def trigger_dr():
     urllib.request.urlopen(req)
     
     # Trigger GitHub Actions DR workflow via repository dispatch
-    github_token = os.environ.get('GITHUB_TOKEN')
+    github_token = os.environ.get('GITHUB_TOKEN_VALUE')
     github_repo = os.environ.get('GITHUB_REPO')
     
     dispatch_url = f"https://api.github.com/repos/{github_repo}/dispatches"

@@ -23,6 +23,12 @@ resource "aws_subnet" "dr_public" {
   }
 }
 
+resource "aws_iam_instance_profile" "dr_profile" {
+  provider = aws.dr
+  name     = "resqops-dr-profile"
+  role     = "resqops-ec2-role"
+}
+
 resource "aws_internet_gateway" "dr_igw" {
   provider = aws.dr
   vpc_id   = aws_vpc.dr_vpc.id
@@ -80,7 +86,8 @@ resource "aws_instance" "dr_ec2" {
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.dr_public.id
   vpc_security_group_ids = [aws_security_group.dr_sg.id]
-
+  iam_instance_profile = aws_iam_instance_profile.dr_profile.name
+  
   user_data = <<-EOF
     #!/bin/bash
     apt-get update -y
