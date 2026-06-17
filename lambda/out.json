@@ -1,0 +1,1 @@
+{"statusCode": 200, "body": "{\"message\": \"DR workflow triggered successfully\", \"repo\": \"Niladri11/ResQops\", \"workflow\": \"dr-trigger.yml\"}"}
