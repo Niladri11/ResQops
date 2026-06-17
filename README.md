@@ -37,7 +37,8 @@ When the primary AWS region (Mumbai) degrades or fails:
 
 ## 🏗️ Architecture
 
-<img width="596" height="647" alt="image" src="https://github.com/user-attachments/assets/18379d76-2694-4b6a-8531-d8cdb68ff473" />
+<img width="896" height="901" alt="image" src="https://github.com/user-attachments/assets/af88b39d-991d-4e60-9ba7-6760c7bab61a" />
+
 
 
 ---
@@ -126,7 +127,8 @@ Every push to `main` triggers:
 Total elapsed: < 8 minutes
 ```
 
-<img width="627" height="441" alt="image" src="https://github.com/user-attachments/assets/06d3aaa5-dbf8-4aae-9b43-c7899e5a3592" />
+<img width="1025" height="372" alt="image" src="https://github.com/user-attachments/assets/a5fbaf9c-f7fc-418a-ad4d-3f2801397e6c" />
+
 
 
 ---
