@@ -32,6 +32,13 @@ When the primary AWS region (Mumbai) degrades or fails:
 5. 💬 **Slack** notifies the team throughout the entire process
 
 **RTO achieved: under 8 minutes — no human required.**
+---
+
+## 🎬 Demo
+
+> Full live demo — automated failover from Mumbai to Singapore, Prometheus alerting, Lambda trigger, and Slack notifications end to end.
+
+[![Watch Demo](https://img.youtube.com/vi/H_psx-2Tx9w/maxresdefault.jpg)](https://youtu.be/H_psx-2Tx9w?si=0lz0jl-zmPcXASi9)
 
 ---
 
